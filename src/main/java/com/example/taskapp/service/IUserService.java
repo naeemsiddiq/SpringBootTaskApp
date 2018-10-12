@@ -5,7 +5,6 @@ import java.util.List;
 import com.example.taskapp.bean.UserBean;
 import com.example.taskapp.dto.Task;
 import com.example.taskapp.dto.User;
-import com.example.taskapp.exception.ApiException;
 
 public interface IUserService {
 

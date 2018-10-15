@@ -3,6 +3,7 @@ package com.example.taskapp.controller;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,10 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.taskapp.IConstants;
 import com.example.taskapp.dto.Task;
+import com.example.taskapp.exception.ApiException;
 import com.example.taskapp.service.ITaskService;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 /**
  * 
@@ -29,6 +33,7 @@ import com.example.taskapp.service.ITaskService;
 
 @RestController
 @RequestMapping(IConstants.API_URL + "/task")
+@EnableHystrix
 public class TaskApiController {
 
 	@Autowired
@@ -48,7 +53,7 @@ public class TaskApiController {
 		task.addLink(linkTo(TaskApiController.class).slash(task.getId())
 				.slash(removeBaseUrl(linkTo(UserApiController.class))).slash(task.getAssignedToId())
 				.slash(linkTo(methodOn(TaskReminderApiController.class).find(task.getAssignedToId(), task.getId())))
-				 .toUri().toString(), "reminders");
+				.toUri().toString(), "reminders");
 
 		task.addLink(linkTo(TaskApiController.class).slash(task.getId()).toUri().toString(), "delete");
 		task.addLink(linkTo(TaskApiController.class).slash(task.getId()).toUri().toString(), "update");
@@ -78,8 +83,15 @@ public class TaskApiController {
 
 	// Delete a task
 	@DeleteMapping("/{id}")
-	public void delete(@PathVariable(value = "id") Long taskId) {
+	@HystrixCommand(fallbackMethod = "fallback_hello", commandProperties = {
+			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000") })
+	public void delete(@PathVariable(value = "id") Long taskId) throws Exception {
+		Thread.sleep(2000);
 		iTaskService.delete(taskId);
+	}
+
+	private void fallback_hello(Long taskId) {
+		throw new ApiException("Request fails. It takes long time to response");
 	}
 
 	// Assign task to some user

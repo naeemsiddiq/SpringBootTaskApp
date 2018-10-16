@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.taskapp.IConstants;
 import com.example.taskapp.dto.Task;
 import com.example.taskapp.dto.User;
+import com.example.taskapp.repository.UserRepository;
 import com.example.taskapp.service.IUserService;
 
 @RestController
@@ -23,6 +24,9 @@ public class UserApiController {
 
 	@Autowired
 	IUserService iUserService;
+	
+	@Autowired
+	UserRepository userRepository;
 
 	@PostMapping("/")
 	public User create(@Valid @RequestBody User user) {
@@ -31,6 +35,7 @@ public class UserApiController {
 
 	@GetMapping("/{id}")
 	public User find(@PathVariable(value = "id") Long id) {
+//		userRepository.findByIdAndNameContainingOrEmailContaining(1l,"abc","admin@task.com");
 		return iUserService.find(id);
 	}
 

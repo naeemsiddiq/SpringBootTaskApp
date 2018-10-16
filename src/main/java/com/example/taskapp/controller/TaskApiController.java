@@ -20,6 +20,9 @@ import com.example.taskapp.dto.Task;
 import com.example.taskapp.exception.ApiException;
 import com.example.taskapp.service.ITaskService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+
+import hystrix.HystrixKey;
+
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 /**
@@ -47,6 +50,7 @@ public class TaskApiController {
 
 	// find a Task by Id
 	@GetMapping("/{id}")
+	@HystrixCommand(groupKey = HystrixKey.Service.TASK_SERVICE, commandKey = HystrixKey.Command.FIND_A_TASK, threadPoolKey = HystrixKey.ThreadPool.TASK_SERVICE_THREADPOOL)
 	public Task find(@PathVariable(value = "id") Long taskId) {
 		Task task = iTaskService.find(taskId);
 		task.addLink(linkTo(TaskApiController.class).slash(task.getId()).toUri().toString(), "self");
@@ -71,6 +75,7 @@ public class TaskApiController {
 
 	// find list of all Tasks
 	@GetMapping("/")
+	@HystrixCommand(groupKey = HystrixKey.Service.TASK_SERVICE, commandKey = HystrixKey.Command.FIND_ALL_TASK, threadPoolKey = HystrixKey.ThreadPool.TASK_SERVICE_THREADPOOL)
 	public List<Task> findAll() {
 		return iTaskService.findAll();
 	}
@@ -83,15 +88,22 @@ public class TaskApiController {
 
 	// Delete a task
 	@DeleteMapping("/{id}")
-	@HystrixCommand(fallbackMethod = "fallback_hello", commandProperties = {
-			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000") })
+	@HystrixCommand(groupKey = HystrixKey.Service.TASK_SERVICE, commandKey = HystrixKey.Command.DELETE_A_TASK, threadPoolKey = HystrixKey.ThreadPool.TASK_SERVICE_THREADPOOL)
 	public void delete(@PathVariable(value = "id") Long taskId) throws Exception {
-		Thread.sleep(2000);
+		// Thread.sleep(2000);
 		iTaskService.delete(taskId);
 	}
 
-	private void fallback_hello(Long taskId) {
+	private void fallback_delete(Long taskId) {
 		throw new ApiException("Request fails. It takes long time to response");
+	}
+
+	private Task fallback_find(Long taskId) {
+		return null;
+	}
+
+	private List<Task> fallback_findAll() {
+		return null;
 	}
 
 	// Assign task to some user

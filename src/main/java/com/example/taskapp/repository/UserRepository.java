@@ -10,5 +10,7 @@ public interface UserRepository extends JpaRepository<UserBean, Long> {
 	UserBean findByName(String name);
 
 	UserBean findByUserRole(String userRole);
+	
+	UserBean findByIdAndNameContainingOrEmailContaining(Long id, String name, String email);
 
 }

@@ -1,0 +1,29 @@
+hystrix:
+  command:
+    delete-a-task:
+      execution.isolation.thread.timeoutInMilliseconds: 5000
+    find-a-task:
+      execution.isolation.thread.timeoutInMilliseconds: 5000
+    find-all-tasks:
+      execution.isolation.thread.timeoutInMilliseconds: 10000
+    default:
+      circuitBreaker:
+        errorThresholdPercentage: 50
+        requestVolumeThreshold: 10
+        sleepWindowInMilliseconds: 10000
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 1000
+  threadpool:
+    default:
+      allowMaximumSizeToDivergeFromCoreSize: true
+      maximumSize: 100
+      maxQueueSize: 100
+      queueSizeRejectionThreshold: 100
+    task-service:
+      coreSize: 100
+    task-reminder-service:
+      coreSize: 100
+    user-service:
+      coreSize: 100

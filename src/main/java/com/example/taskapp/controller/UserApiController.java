@@ -18,6 +18,8 @@ import com.example.taskapp.dto.User;
 import com.example.taskapp.repository.UserRepository;
 import com.example.taskapp.service.IUserService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping(IConstants.API_URL + "/user")
 public class UserApiController {
@@ -29,17 +31,20 @@ public class UserApiController {
 	UserRepository userRepository;
 
 	@PostMapping("/")
+	@ApiOperation(value = "Create a user")
 	public User create(@Valid @RequestBody User user) {
 		return iUserService.create(user);
 	}
 
 	@GetMapping("/{id}")
+	@ApiOperation(value = "Find User")
 	public User find(@PathVariable(value = "id") Long id) {
 //		userRepository.findByIdAndNameContainingOrEmailContaining(1l,"abc","admin@task.com");
 		return iUserService.find(id);
 	}
 
 	@GetMapping("/{userId}/assignedTasks") // /assignedTasks or /assigned/tasks/
+	@ApiOperation(value = "Get tasks that are assigned to a user")
 	public List<Task> assigned(@PathVariable(value = "userId") Long userId) {
 		return iUserService.assigned(userId);
 	}

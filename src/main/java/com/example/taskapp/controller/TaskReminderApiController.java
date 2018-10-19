@@ -21,6 +21,8 @@ import com.example.taskapp.IConstants;
 import com.example.taskapp.dto.TaskReminder;
 import com.example.taskapp.service.ITaskReminderService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping(IConstants.API_URL)
 public class TaskReminderApiController {
@@ -29,28 +31,33 @@ public class TaskReminderApiController {
 	ITaskReminderService iTaskReminderService;
 
 	@PostMapping("/reminders")
+	@ApiOperation(value = "Create a reminder")
 	public TaskReminder create(@Valid @RequestBody TaskReminder reminder) {
 		return iTaskReminderService.create(reminder);
 	}
 
 	@GetMapping("/user/{userId}/reminders/{reminderId}")
+	@ApiOperation(value = "Find a reminder")
 	public TaskReminder find(@PathVariable(value = "userId") Long userId,
 			@PathVariable(value = "reminderId") Long reminderId) {
 		return iTaskReminderService.find(userId, reminderId);
 	}
 
 	@GetMapping("/user/{userId}/reminders")
+	@ApiOperation(value = "Find all reminders")
 	public List<TaskReminder> findAll(@PathVariable(value = "userId") Long userId) {
 		return iTaskReminderService.findAll(userId);
 	}
 
 	@GetMapping("/user/{userId}/task/{taskId}/reminders")
+	@ApiOperation(value = "Find all reminders by task id")
 	public List<TaskReminder> findAllByTaskId(@PathVariable(value = "userId") Long userId,
 			@PathVariable(value = "taskId") Long taskId) {
 		return iTaskReminderService.finAllByTaskId(userId, taskId);
 	}
 
 	@PatchMapping("/user/{userId}/reminders/{reminderId}")
+	@ApiOperation(value = "Update a reminder")
 	public TaskReminder update(@PathVariable(value = "userId") Long userId,
 			@PathVariable(value = "reminderId") Long reminderId,
 			@RequestParam(value = "reminderDay") @DateTimeFormat(iso = ISO.DATE) Date reminderDay) {
@@ -58,6 +65,7 @@ public class TaskReminderApiController {
 	}
 
 	@DeleteMapping("/user/{userId}/reminders/{reminderId}")
+	@ApiOperation(value = "Delete a reminder")
 	public void delete(@PathVariable(value = "userId") Long userId,
 			@PathVariable(value = "reminderId") Long reminderId) {
 		iTaskReminderService.delete(userId, reminderId);

@@ -10,7 +10,7 @@ hystrix:
       circuitBreaker:
         errorThresholdPercentage: 50
         requestVolumeThreshold: 10
-        sleepWindowInMilliseconds: 10000
+        sleepWindowInMilliseconds: 40000
       execution:
         isolation:
           thread:

@@ -31,7 +31,6 @@ public class HystrixKey {
 		private Command() {
 		}
 
-		// Task Controller methods
 		public static final String DELETE_A_TASK = "delete-a-task";
 		public static final String FIND_A_TASK = "find-a-task";
 		public static final String FIND_ALL_TASK = "find-all-tasks";

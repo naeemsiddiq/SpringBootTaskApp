@@ -22,6 +22,8 @@ import com.example.taskapp.service.ITaskService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 
 import hystrix.HystrixKey;
+import io.swagger.annotations.ApiOperation;
+import javassist.NotFoundException;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
@@ -36,7 +38,6 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 @RestController
 @RequestMapping(IConstants.API_URL + "/task")
-@EnableHystrix
 public class TaskApiController {
 
 	@Autowired
@@ -44,12 +45,14 @@ public class TaskApiController {
 
 	// Create a new Task
 	@PostMapping("/")
+	@ApiOperation(value = "Create a task")
 	public Task create(@Valid @RequestBody Task task) {
 		return iTaskService.create(task);
 	}
 
 	// find a Task by Id
 	@GetMapping("/{id}")
+	@ApiOperation("Find a task")
 	@HystrixCommand(groupKey = HystrixKey.Service.TASK_SERVICE, commandKey = HystrixKey.Command.FIND_A_TASK, threadPoolKey = HystrixKey.ThreadPool.TASK_SERVICE_THREADPOOL)
 	public Task find(@PathVariable(value = "id") Long taskId) {
 		Task task = iTaskService.find(taskId);
@@ -75,6 +78,7 @@ public class TaskApiController {
 
 	// find list of all Tasks
 	@GetMapping("/")
+	@ApiOperation(value = "Find all tasks")
 	@HystrixCommand(groupKey = HystrixKey.Service.TASK_SERVICE, commandKey = HystrixKey.Command.FIND_ALL_TASK, threadPoolKey = HystrixKey.ThreadPool.TASK_SERVICE_THREADPOOL)
 	public List<Task> findAll() {
 		return iTaskService.findAll();
@@ -82,12 +86,14 @@ public class TaskApiController {
 
 	// Update a Task
 	@PutMapping("/{id}")
+	@ApiOperation(value = "Update a task")
 	public Task update(@PathVariable(value = "id") Long taskId, @Valid @RequestBody Task task) {
 		return iTaskService.update(taskId, task);
 	}
 
 	// Delete a task
 	@DeleteMapping("/{id}")
+	@ApiOperation(value = "Delete a task with id")
 	@HystrixCommand(groupKey = HystrixKey.Service.TASK_SERVICE, commandKey = HystrixKey.Command.DELETE_A_TASK, threadPoolKey = HystrixKey.ThreadPool.TASK_SERVICE_THREADPOOL)
 	public void delete(@PathVariable(value = "id") Long taskId) throws Exception {
 		// Thread.sleep(2000);
@@ -108,6 +114,7 @@ public class TaskApiController {
 
 	// Assign task to some user
 	@PatchMapping("/{taskId}/assign/{userId}")
+	@ApiOperation(value = "Assign task")
 	public Task assign(@PathVariable(value = "taskId") Long taskId, @PathVariable(value = "userId") Long userId) {
 		return iTaskService.assign(taskId, userId);
 	}

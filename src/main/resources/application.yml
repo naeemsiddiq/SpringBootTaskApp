@@ -1,0 +1,11 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: task-application
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.port}
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka

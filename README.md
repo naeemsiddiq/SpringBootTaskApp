@@ -26,3 +26,9 @@ Hystrix is a latency and fault tolerance library designed to isolate points of a
 
 ## `Eureka Server`
 Eureka is a REST (Representational State Transfer) based service that is primarily used in the AWS cloud for locating services for the purpose of load balancing and failover of middle-tier servers. We call this service, the Eureka Server. Eureka also comes with a Java-based client component,the Eureka Client, which makes interactions with the service much easier.
+
+## `Features`
+  * Creates tasks and assign to users.
+  * User sees tasks assigned to him and can set a reminder to get reminded about the due date of task.
+  * Swagger integration to hit the apis from swagger ui. 
+  * Hystrix to see the api

@@ -14,3 +14,8 @@ swagger configurations
 				
 hystrix configurations
 - @EnableHystrix  and @EnableCircuitBreaker  do the same work, we can use any one of them
+
+
+
+-while enabling HTTPS in this application, got "keytool is not recognized as an internal or external command, operable program or batch file" error
+  RESOLVED this by setting jdk path in environment variable
